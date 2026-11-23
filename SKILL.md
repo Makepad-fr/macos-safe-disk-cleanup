@@ -1,6 +1,6 @@
 ---
 name: macos-safe-disk-cleanup
-description: Audit and reclaim macOS disk space from stale caches, generated build files, and unused simulator data while preserving active work. Use when asked to free storage, investigate large folders, or clean a Mac development machine.
+description: Audit and reclaim macOS disk space from stale caches, generated build files, simulator data, Docker resources, and disposable VMs while preserving active work. Use when asked to free storage, investigate large folders, or clean a Mac development machine.
 license: MIT
 ---
 
@@ -29,6 +29,10 @@ Build a concrete candidate list: exact path or resource name, purpose, estimated
 - For Xcode caches, distinguish build intermediates from `.xcarchive`, `.dSYM`, `.xcresult`, logs, and retained test evidence. Check generated package checkouts for local changes before considering a complete cache reset.
 - Use package-manager or application cleanup operations when they provide an inspectable, appropriately scoped mechanism. Avoid leaving half-deleted package bundles, registries, or manifests. Do not blanket-delete `~/Library/Caches`, application-support folders, worktrees, or dated task directories.
 - Treat VM disks, container volumes, and sandbox workspaces as data-bearing resources. Keep them outside routine cache deletion until their dependencies and deletion authorization have been established.
+
+## Docker, sandboxes, and CI virtual machines
+
+When these account for significant storage or are explicitly included in the request, read [references/virtualization.md](references/virtualization.md) before taking action. It covers daemon/context selection, inactive volumes, sparse-disk reclamation, stopped CI guests, runner dependencies, and retained templates/evidence. A generic request to free disk space does not authorize resetting a daemon or deleting unknown VM data.
 
 ## Simulators
 
