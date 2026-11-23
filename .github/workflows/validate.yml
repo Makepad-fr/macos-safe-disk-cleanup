@@ -29,6 +29,10 @@ jobs:
         run: |
           python3 -m venv "$RUNNER_TEMP/skill-validation"
           "$RUNNER_TEMP/skill-validation/bin/python" -m pip install 'git+https://github.com/agentskills/agentskills.git@83021e2be457a9b6679148719c1f6074f0ad975e#subdirectory=skills-ref'
+      - name: Check CI trust boundary
+        run: |
+          "$RUNNER_TEMP/skill-validation/bin/python" .github/scripts/check_ci_policy.py
+          "$RUNNER_TEMP/skill-validation/bin/python" -m unittest discover -s .github/scripts -p 'test_*.py' -v
       - name: Validate Agent Skills package
         run: '"$RUNNER_TEMP/skill-validation/bin/skills-ref" validate "$GITHUB_WORKSPACE"'
       - name: Check whitespace
