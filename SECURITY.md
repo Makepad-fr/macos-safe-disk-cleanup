@@ -14,7 +14,7 @@ covers the package and its CI configuration.
 
 Repository Actions defaults to a read-only token and cannot approve pull requests.
 Every external contributor requires workflow approval. Actions must use full
-commit SHAs; the allowlist currently contains only the reviewed checkout action.
+commit SHAs; the allowlist currently contains only the reviewed checkout and Python setup actions.
 This approval limits who can start jobs; it does not make submitted code trusted.
 Never add repository or organization-wide deployment credentials to this public
 repository. Keep any future publishing credentials behind a separate reviewed
