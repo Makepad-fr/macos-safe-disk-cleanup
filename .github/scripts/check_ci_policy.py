@@ -8,6 +8,7 @@ import re
 import yaml
 
 CHECKOUT = 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262'
+SETUP = 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1'
 ROUTE = {'group': 'macos-skill-isolated',
          'labels': ['self-hosted', 'Linux', 'X64', 'macos-skill-vm']}
 
@@ -30,12 +31,18 @@ def check(text):
     require(not set(job) & {'if', 'container', 'services', 'permissions', 'environment', 'uses'}, 'Unexpected job capability or conditional skip')
     require(workflow['concurrency']['cancel-in-progress'] == 'true', 'Cancel superseded runs')
     checkout_count = 0
+    setup_count = 0
     for step in job['steps']:
         if 'uses' in step:
-            require(step['uses'] == CHECKOUT, 'Only the reviewed pinned action is allowed')
-            require(step.get('with', {}).get('persist-credentials') == 'false', 'Do not persist checkout credentials')
-            checkout_count += 1
+            require(step['uses'] in (CHECKOUT, SETUP), 'Only reviewed pinned actions are allowed')
+            if step['uses'] == CHECKOUT:
+                require(step.get('with', {}).get('persist-credentials') == 'false', 'Do not persist checkout credentials')
+                checkout_count += 1
+            else:
+                require(step.get('with', {}) == {'python-version': '3.12.16'}, 'Review Python setup changes')
+                setup_count += 1
     require(checkout_count == 1, 'Exactly one checkout required')
+    require(setup_count == 1, 'Exactly one Python setup required')
 
 
 if __name__ == '__main__':
