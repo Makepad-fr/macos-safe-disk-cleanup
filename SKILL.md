@@ -1,6 +1,13 @@
 ---
 name: macos-safe-disk-cleanup
-description: Audit and reclaim macOS disk space from stale caches, generated build files, simulator data, Docker resources, and disposable VMs while preserving active work. Use when asked to free storage, investigate large folders, or clean a Mac development machine.
+description: >-
+  Reclaim disk space on a Mac safely. Use when a user says their device is full or
+  low on storage, asks to "make space", "free up space", "clean caches", find large
+  files, or investigate "No space left on device", and the target is this macOS
+  machine (including when macOS is known only from the environment). Covers
+  storage audits and authorized cleanup of caches, Xcode builds, simulators,
+  local Docker resources, and disposable VMs. Do not use for RAM/memory pressure,
+  code refactoring, cloud storage, or remote/non-macOS machines.
 license: MIT
 ---
 
