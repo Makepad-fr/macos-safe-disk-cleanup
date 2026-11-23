@@ -12,30 +12,35 @@ ROUTE = {'group': 'macos-skill-isolated',
          'labels': ['self-hosted', 'Linux', 'X64', 'macos-skill-vm']}
 
 
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
 def check(text):
     workflow = yaml.load(text, Loader=yaml.BaseLoader)
-    assert set(workflow['on']) == {'pull_request', 'push', 'workflow_dispatch'}, 'Unexpected trigger'
-    assert workflow['on']['push']['branches'] == ['main'], 'Push must target main'
-    assert workflow['permissions'] == {'contents': 'read'}, 'Token must be read-only'
-    assert not re.search(r'\bsecrets\s*[.\[]', text), 'No secrets in public CI'
-    assert set(workflow['jobs']) == {'package'}, 'Review new jobs explicitly'
+    require(set(workflow['on']) == {'pull_request', 'push', 'workflow_dispatch'}, 'Unexpected trigger')
+    require(workflow['on']['push']['branches'] == ['main'], 'Push must target main')
+    require(workflow['permissions'] == {'contents': 'read'}, 'Token must be read-only')
+    require(not re.search(r'\bsecrets\s*[.\[]', text), 'No secrets in public CI')
+    require(set(workflow['jobs']) == {'package'}, 'Review new jobs explicitly')
     job = workflow['jobs']['package']
-    assert job['runs-on'] == ROUTE, 'Dedicated isolated runner group required'
-    assert 0 < int(job['timeout-minutes']) <= 5, 'Bound job lifetime'
-    assert not set(job) & {'if', 'container', 'services', 'permissions', 'environment', 'uses'}, 'Unexpected job capability or conditional skip'
-    assert workflow['concurrency']['cancel-in-progress'] == 'true', 'Cancel superseded runs'
+    require(job['runs-on'] == ROUTE, 'Dedicated isolated runner group required')
+    require(0 < int(job['timeout-minutes']) <= 5, 'Bound job lifetime')
+    require(not set(job) & {'if', 'container', 'services', 'permissions', 'environment', 'uses'}, 'Unexpected job capability or conditional skip')
+    require(workflow['concurrency']['cancel-in-progress'] == 'true', 'Cancel superseded runs')
     checkout_count = 0
     for step in job['steps']:
         if 'uses' in step:
-            assert step['uses'] == CHECKOUT, 'Only the reviewed pinned action is allowed'
-            assert step.get('with', {}).get('persist-credentials') == 'false', 'Do not persist checkout credentials'
+            require(step['uses'] == CHECKOUT, 'Only the reviewed pinned action is allowed')
+            require(step.get('with', {}).get('persist-credentials') == 'false', 'Do not persist checkout credentials')
             checkout_count += 1
-    assert checkout_count == 1, 'Exactly one checkout required'
+    require(checkout_count == 1, 'Exactly one checkout required')
 
 
 if __name__ == '__main__':
     directory = Path(__file__).resolve().parents[1] / 'workflows'
     workflows = sorted(directory.glob('*.yml')) + sorted(directory.glob('*.yaml'))
-    assert [path.name for path in workflows] == ['validate.yml'], 'Review added workflows explicitly'
+    require([path.name for path in workflows] == ['validate.yml'], 'Review added workflows explicitly')
     check(workflows[0].read_text())
     print('CI workflow policy passed; VM isolation requires separate operator evidence.')
