@@ -30,13 +30,17 @@ For an audit without deletion:
 - Active builds, open files, working directories, and recently used dependencies.
 - Rebuildable caches versus source files, databases, archives, and retained evidence.
 - Booted simulators and device data that may still be needed.
+- Docker contexts, active containers, named volumes, and sandbox workspaces.
+- CI runner registrations, pending work, reusable VM templates, and diagnostic exports before deleting old guests.
 - Completion of cleanup and the state of workloads afterward.
 
 APFS clones can share most of their disk blocks. A directory that reports 100 GB may release very little space when deleted. This skill reports the measured free-space change and does not promise savings from folder sizes alone.
 
 ## Scope
 
-macOS is required for the cleanup workflow. Xcode tools are needed only for simulator work. Missing tools or denied filesystem access should result in a partial audit, not installation, privilege escalation, or service shutdown without authorization.
+macOS is required for the cleanup workflow. Xcode tools are needed only for simulator work. Docker, a VM manager such as Tart, and CI-service access are needed only when inspecting those resources. Missing tools or denied filesystem access should result in a partial audit, not installation, privilege escalation, or service shutdown without authorization.
+
+The [virtualization runbook](references/virtualization.md) explains why a stopped VM or an unattached volume can still matter. It also separates runner registration checks from proof that an actual CI job completed.
 
 The package follows the [Agent Skills format](https://agentskills.io/specification) and includes optional Codex UI metadata. Its package structure is validated in CI; that check does not prove every cleanup decision is safe on every machine.
 
