@@ -2,3 +2,6 @@ interface:
   display_name: "macOS Safe Disk Cleanup"
   short_description: "Reclaim Mac storage while preserving active work"
   default_prompt: "Use $macos-safe-disk-cleanup to inspect my Mac, clear authorized disposable files, and verify the space recovered while preserving active work."
+
+policy:
+  allow_implicit_invocation: true

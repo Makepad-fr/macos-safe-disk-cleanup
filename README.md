@@ -16,13 +16,17 @@ The CLI lets you select a supported agent and installation scope. You can also u
 
 ## Use
 
-Ask your agent:
+Ask your agent normally; you do not need to name the skill:
 
-> Use $macos-safe-disk-cleanup to find what is taking up space. Clear disposable caches, preserve my active projects and release evidence, and report the measured space recovered.
+> Can you make space on my device without deleting my projects?
+
+> My Mac is almost full. Find what is taking up space and clear disposable caches.
 
 For an audit without deletion:
 
-> Use $macos-safe-disk-cleanup to audit my Mac's storage. Show the largest consumers and concrete cleanup candidates; do not delete anything.
+> What is taking up storage on my Mac? Show me cleanup candidates, but do not delete anything.
+
+The description includes these everyday requests, and Codex implicit invocation is explicitly enabled. The agent still chooses whether the skill applies from the request and environment; automatic selection does not grant additional deletion permissions. You can also invoke `$macos-safe-disk-cleanup` explicitly.
 
 ## What it checks
 
