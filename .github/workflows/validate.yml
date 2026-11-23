@@ -32,7 +32,7 @@ jobs:
       - name: Install the pinned reference validator
         run: |
           python3 -m venv "$RUNNER_TEMP/skill-validation"
-          "$RUNNER_TEMP/skill-validation/bin/python" -m pip install 'git+https://github.com/agentskills/agentskills.git@83021e2be457a9b6679148719c1f6074f0ad975e#subdirectory=skills-ref'
+          "$RUNNER_TEMP/skill-validation/bin/python" -m pip install 'git+https://github.com/agentskills/agentskills.git@83021e2be457a9b6679148719c1f6074f0ad975e#subdirectory=skills-ref' 'PyYAML==6.0.3'
       - name: Check CI trust boundary
         run: |
           "$RUNNER_TEMP/skill-validation/bin/python" .github/scripts/check_ci_policy.py
